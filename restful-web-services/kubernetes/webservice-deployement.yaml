@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webservice
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webservice
+    spec:
+      containers:
+      - name: webservice
+        image: dockerjain/restful-web-services
+        ports:
+        - containerPort: 8888
+

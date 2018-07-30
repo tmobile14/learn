@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: demo1
+  name: demo1-svc
+  namespace: default
+spec:
+  ports:
+   - protocol: TCP
+     port: 8090
+     targetPort: 8090
+  selector:
+    app: demo1
+  type: LoadBalancer
+

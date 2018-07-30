@@ -1,0 +1,33 @@
+node {
+
+    checkout scm
+
+    env.DOCKER_API_VERSION="1.23"
+    
+    sh "git rev-parse --short HEAD > commit-id"
+
+    tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+    appName = "webservice"
+    env.BUILDING=appName
+    env.TAGNAME=tag
+    env.DOCKER_HOST="unix:///var/run/docker.sock"
+
+    stage "Build"
+    
+        sh "mvn clean install dockerfile:build -f restful-web-services/pom.xml"
+
+    stage "Tag"
+
+        sh "docker tag springio/restful-web-services dockerjain/restful-web-services:${tag}"
+
+    stage "push"
+
+        withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
+            sh "docker push dockerjain/restful-web-services:${tag}"
+        }
+    
+    stage "Deploy"
+
+        sh "sed 's#dockerjain/restful-web-services#'dockerjain/restful-web-services:$TAGNAME'#' restful-web-services/kubernetes/webservice-deployement.yaml | kubectl apply -f -"
+        sh "kubectl rollout status deployment/webservice"
+}

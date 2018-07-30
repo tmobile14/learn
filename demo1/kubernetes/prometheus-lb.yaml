@@ -1,0 +1,35 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "kube-prometheus-lb",
+    "namespace": "monitoring",
+    "selfLink": "/api/v1/namespaces/monitoring/services/kube-prometheus",
+    "labels": {
+      "app": "prometheus",
+      "chart": "prometheus-0.0.44",
+      "heritage": "Tiller",
+      "prometheus": "kube-prometheus",
+      "release": "kube-prometheus"
+    }
+  },
+  "spec": {
+    "ports": [
+      {
+        "name": "http",
+        "protocol": "TCP",
+        "port": 9090,
+        "targetPort": 9090
+      }
+    ],
+    "selector": {
+      "app": "prometheus",
+      "prometheus": "kube-prometheus"
+    },
+    "type": "LoadBalancer",
+    "sessionAffinity": "None"
+  },
+  "status": {
+    "loadBalancer": {}
+  }
+}

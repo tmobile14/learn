@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: demo2
+  name: demo2-svc
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: my.database.example.com
+

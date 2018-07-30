@@ -1,0 +1,33 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "kube-prometheus-grafana-lb",
+    "namespace": "monitoring",
+    "selfLink": "/api/v1/namespaces/monitoring/services/kube-prometheus-grafana",
+    "labels": {
+      "app": "kube-prometheus-grafana",
+      "chart": "grafana-0.0.35",
+      "heritage": "Tiller",
+      "release": "kube-prometheus"
+    }
+  },
+  "spec": {
+    "ports": [
+      {
+        "name": "http",
+        "protocol": "TCP",
+        "port": 80,
+        "targetPort": 3000
+      }
+    ],
+    "selector": {
+      "app": "kube-prometheus-grafana"
+    },
+    "type": "LoadBalancer",
+    "sessionAffinity": "None"
+  },
+  "status": {
+    "loadBalancer": {}
+  }
+}

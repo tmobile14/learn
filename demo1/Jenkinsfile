@@ -1,0 +1,31 @@
+node {
+
+    checkout scm
+
+    env.DOCKER_API_VERSION="1.23"
+    
+    sh "git rev-parse --short HEAD > commit-id"
+
+    tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+    appName = "demo1"
+    env.BUILDING=appName
+    env.TAGNAME=tag
+    env.DOCKER_HOST="unix:///var/run/docker.sock"
+
+    stage "Build"
+    
+        sh "mvn clean install dockerfile:build -f demo1/pom.xml"
+
+    stage "Tag"
+
+        sh "docker tag springio/demo1 dockerjain/springiodemo1:${tag}"
+
+    stage "push"
+
+        sh "demo1/push.sh ${tag}"
+    
+    stage "Deploy"
+
+        sh "sed 's#dockerjain/springiodemo1#'dockerjain/springiodemo1:$TAGNAME'#' demo1/kubernetes/demo-deployment.yaml | kubectl apply -f -"
+        sh "kubectl rollout status deployment/demo1"
+}

@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: demo-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  namespace: default
+spec:
+  rules:
+  - host: www.example.com
+    http:
+      paths: 
+      - backend:
+          serviceName: demo-svc
+          servicePort: 8090
+        path: /green
+  - host: www.example.com
+    http:
+      paths: 
+      - backend:
+          serviceName: demo1-svc
+          servicePort: 8090
+        path: /blue

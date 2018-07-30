@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webservice
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webservice
+    spec:
+      containers:
+      - name: webservice
+        image: dockerjain/restful-web-services:v2
+        ports:
+        - containerPort: 8888
+        volumeMounts:
+        - name: webservicevol
+          mountPath: /opt/ashish
+        livenessProbe:
+          httpGet:
+            path: /users
+            port: 8888
+          initialDelaySeconds: 20
+          periodSeconds: 10
+      volumes:
+      - name: webservicevol
+        persistentVolumeClaim:
+          claimName: webservicevol-claim
